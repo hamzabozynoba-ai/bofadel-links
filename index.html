@@ -23,7 +23,6 @@
     --gold-hi: #f6e6b4;
     --gold-lo: #a9792f;
     --cream: #faf3e4;
-    --line: linear-gradient(135deg, #f6e6b4 0%, #c99a48 35%, #f1d996 60%, #a9792f 100%);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { background: var(--deep); }
@@ -51,15 +50,15 @@
     box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
     animation: rise .9s ease-out both;
   }
-  /* the gold double rule: an outer hairline and a finer inner one */
+  /* the gold double rule: an outer hairline and a finer inner one. Plain borders, not masks: mask-composite is
+     missing on some phone browsers and the lines vanished there. Light from the upper left: the top and left
+     edges in the light gold, the bottom and right in the deep one. */
   .card::before, .card::after {
-    content: ''; position: absolute; pointer-events: none; border-radius: inherit;
-    padding: 1.5px; background: var(--line);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude;
+    content: ''; position: absolute; pointer-events: none; border-radius: 22px;
+    border: 1.5px solid; border-color: #f1d996 #a9792f #a9792f #f1d996;
   }
   .card::before { inset: 0; }
-  .card::after { inset: 7px; padding: 1px; border-radius: 16px; opacity: .55; }
+  .card::after { inset: 7px; border-width: 1px; border-radius: 16px; opacity: .55; }
 
   .logo { display: block; width: 78%; max-width: 300px; height: auto; margin: 0 auto; filter: drop-shadow(0 4px 8px rgba(20, 2, 4, .6)); }
   .since {
@@ -82,9 +81,8 @@
     transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
   }
   .links a::before {
-    content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: var(--line);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; opacity: .85;
+    content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 14px;
+    border: 1px solid; border-color: #f1d996 #b8893a #a9792f #e2c575; opacity: .9;
   }
   .links a:hover, .links a:focus-visible {
     transform: translateY(-2px);
