@@ -109,6 +109,11 @@
   .soon { text-align: center; color: rgba(250, 243, 228, .75); font-size: 15px; padding: 10px 0 4px; }
   footer { margin-top: 30px; text-align: center; font-size: 12.5px; color: rgba(250, 243, 228, .55); line-height: 1.8; }
   footer span { color: var(--gold); }
+  /* the designer's credit: quieter than the brand's lines, set apart by a hairline */
+  .credit { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(226, 197, 117, .18);
+            font-size: 11.5px; color: rgba(250, 243, 228, .42); }
+  .credit a { color: rgba(226, 197, 117, .8); text-decoration: none; direction: ltr; unicode-bidi: isolate; }
+  .credit a:hover, .credit a:focus-visible { color: var(--gold); text-decoration: underline; outline: none; }
 
   .links li { animation: rise .7s ease-out both; }
   .links li:nth-child(1) { animation-delay: .15s; } .links li:nth-child(2) { animation-delay: .23s; }
@@ -126,7 +131,9 @@
   <div class="divider" aria-hidden="true"><i></i><b class="s"></b><b></b><b class="s"></b><i></i></div>
   <ul class="links" id="links"></ul>
   <p class="soon" id="soon" hidden>روابط صفحاتنا قريبًا</p>
-  <footer>مجوهرات <span>بوفضل</span> · طبرق، ليبيا<br>&copy; <span id="year"></span> BOFADEL For Jewelry</footer>
+  <footer>مجوهرات <span>بوفضل</span> · طبرق، ليبيا<br>&copy; <span id="year"></span> BOFADEL For Jewelry
+    <p class="credit">تصميم <a href="https://wa.me/218925517434" target="_blank" rel="noopener">Hamza Bozynoba</a></p>
+  </footer>
 </main>
 
 <script>
