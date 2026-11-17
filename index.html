@@ -105,6 +105,18 @@
   .label small { font-size: 12px; color: rgba(250, 243, 228, .62); letter-spacing: .4px; direction: ltr; text-align: right; }
   .arrow { flex: none; width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 2; opacity: .8; }
 
+  /* the branches: a small gold heading between hairlines, then one row per branch */
+  .section { display: flex; align-items: center; gap: 12px; margin: 30px 0 16px; color: var(--gold);
+             font-weight: 700; font-size: 15px; letter-spacing: .5px; }
+  .section::before, .section::after { content: ''; flex: 1; height: 1px; }
+  .section::before { background: linear-gradient(90deg, transparent, rgba(226, 197, 117, .7)); }
+  .section::after { background: linear-gradient(270deg, transparent, rgba(226, 197, 117, .7)); }
+  /* a branch whose map link is not in yet: the same row, quieter, not a link */
+  .links .pending { position: relative; display: flex; align-items: center; gap: 14px; min-height: 62px;
+                    padding: 10px 16px; border-radius: 14px; color: var(--cream); opacity: .62;
+                    background: linear-gradient(180deg, rgba(90, 10, 20, .4), rgba(40, 4, 9, .5)); }
+  .links .pending::before { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 14px;
+                            border: 1px dashed rgba(226, 197, 117, .6); }
   .soon { text-align: center; color: rgba(250, 243, 228, .75); font-size: 15px; padding: 10px 0 4px; }
   footer { margin-top: 30px; text-align: center; font-size: 12.5px; color: rgba(250, 243, 228, .55); line-height: 1.8; }
   footer span { color: var(--gold); }
@@ -130,6 +142,8 @@
   <div class="divider" aria-hidden="true"><i></i><b class="s"></b><b></b><b class="s"></b><i></i></div>
   <ul class="links" id="links"></ul>
   <p class="soon" id="soon" hidden>روابط صفحاتنا قريبًا</p>
+  <h2 class="section">فروعنا</h2>
+  <ul class="links" id="branches"></ul>
   <footer>مجوهرات <span>بوفضل</span> · طبرق، ليبيا<br>&copy; <span id="year"></span> BOFADEL For Jewelry
     <p class="credit">تصميم <a href="https://wa.me/218925517434" target="_blank" rel="noopener">Hamza Bozynoba</a></p>
   </footer>
@@ -143,6 +157,11 @@
     ['facebook', 'فيسبوك', 'Facebook'],
     ['snapchat', 'سناب شات', 'Snapchat']
   ];
+  // Branches: always listed; until its map link is set a branch shows "الموقع قريبًا" and does not link
+  const BRANCHES = [
+    ['map_benghazi', 'فرع بنغازي', 'Benghazi'],
+    ['map_tobruk', 'فرع طبرق', 'Tobruk']
+  ];
   const ARROW = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 
   // Only web links leave the page; a bare WhatsApp number becomes its wa.me link.
@@ -154,22 +173,32 @@
     catch (e) { return ''; }
   }
 
+  function item(icon, ar, en, href) {
+    const li = document.createElement('li');
+    const el = document.createElement(href ? 'a' : 'div');
+    if (href) { el.href = href; el.target = '_blank'; el.rel = 'noopener'; } else el.className = 'pending';
+    el.innerHTML = '<img class="ico" src="assets/icons/' + icon + '.png" alt="" width="42" height="42"><span class="label"><strong></strong><small></small></span>' + (href ? ARROW : '');
+    el.querySelector('strong').textContent = ar;
+    el.querySelector('small').textContent = en;
+    li.appendChild(el);
+    return li;
+  }
+
   function render(data) {
     const ul = document.getElementById('links');
     ul.textContent = '';
     let shown = 0;
     for (const [key, ar, en] of ORDER) {
       const href = safeUrl(key, data[key]);
-      if (!href) continue;
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = href; a.target = '_blank'; a.rel = 'noopener';
-      a.innerHTML = '<img class="ico" src="assets/icons/' + key + '.png" alt="" width="42" height="42"><span class="label"><strong></strong><small></small></span>' + ARROW;
-      a.querySelector('strong').textContent = ar;
-      a.querySelector('small').textContent = en;
-      li.appendChild(a); ul.appendChild(li); shown++;
+      if (href) { ul.appendChild(item(key, ar, en, href)); shown++; }
     }
     document.getElementById('soon').hidden = shown > 0;
+    const br = document.getElementById('branches');
+    br.textContent = '';
+    for (const [key, ar, en] of BRANCHES) {
+      const href = safeUrl(key, data[key]);
+      br.appendChild(item('location', ar, href ? en : 'الموقع قريبًا', href));
+    }
   }
 
   document.getElementById('year').textContent = new Date().getFullYear();
